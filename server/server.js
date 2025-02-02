@@ -7,7 +7,11 @@ const PORT = 8080;
 
 const server = http.createServer(app);
 
-const io = new Server(server)
+const io = new Server(server,{
+    cors:{
+        origin:"*"
+    }
+})
 
 app.get("/", (req, res) => {
   res.send("working");
@@ -19,10 +23,19 @@ server.listen(PORT, () => {
 
 // Handling socket connections
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  console.log(`${socket.id} connected`);
 
-  // You can add socket events here, for example:
+
+  socket.on("send-location",(location)=>{
+    console.log(location,"location");
+    
+    const {latitude,longitude}= location
+    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+  })
+
+
   socket.on("disconnect", () => {
     console.log("A user disconnected");
   });
 });
+
