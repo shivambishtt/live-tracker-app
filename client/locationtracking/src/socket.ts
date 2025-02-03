@@ -9,9 +9,10 @@ const connectSocket = () => {
     socket.on("connect", () => {
         console.log("Connected to socket io server")
     })
-    socket.on("test", () => {
-        console.log("test init from the client");
 
+    socket.on("receive-location", (location) => {
+        console.log("Location from server to all clients",location);
+        
     })
 }
 
@@ -27,7 +28,7 @@ const disconnectSocket = () => {
 if (window.navigator.geolocation) {
     navigator.geolocation.watchPosition(position => {
         const { latitude, longitude } = position.coords
-        socket.emit("send-location",
+        socket.emit("send-location", // sending coord to server
             { latitude, longitude },
             (error: string) => {
                 if (error) console.log(error)
@@ -40,7 +41,7 @@ if (window.navigator.geolocation) {
             enableHighAccuracy: true,
             timeout: 5000,
             maximumAge: 0, //caching
-        }
+        },
 
     )
     console.log("Browser supports geo location");
